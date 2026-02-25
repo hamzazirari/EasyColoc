@@ -48,4 +48,15 @@ protected $fillable = [
             'password' => 'hashed',
         ];
     }
+    public function ownedColocations()
+{
+    return $this->hasMany(Colocation::class, 'owner_id');
+}
+
+// Colocations où l'user est membre
+public function colocations()
+{
+    return $this->belongsToMany(Colocation::class)
+                ->withPivot('role', 'joined_at', 'left_at');
+}
 }
