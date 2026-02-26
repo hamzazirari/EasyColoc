@@ -26,4 +26,16 @@
             </div>
         </div>
     </div>
+
+    <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+    <div class="max-w-xl">
+        @include('profile.partials.upload-photo-form')
+    </div>
+</div>
+
+<div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+    <div class="max-w-xl">
+        @include('profile.partials.leave-cancel-colocation-form')
+    </div>
+</div>
 </x-app-layout>

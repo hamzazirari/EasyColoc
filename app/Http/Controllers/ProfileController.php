@@ -37,6 +37,48 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
+    public function uploadPhoto(Request $request): RedirectResponse
+{
+    $request->validate([
+        'photo' => ['required', 'image', 'max:2048'],
+    ]);
+
+    $path = $request->file('photo')->store('photos', 'public');
+
+    $request->user()->update([
+        'photo' => $path,
+    ]);
+
+    return Redirect::route('profile.edit')->with('status', 'photo-updated');
+}
+
+public function leaveColocation(Request $request): RedirectResponse
+{
+    $user = $request->user();
+
+    $user->colocations()->updateExistingPivot(
+        $user->colocations()->first()->id,
+        ['left_at' => now()]
+    );
+
+    return Redirect::route('profile.edit')->with('status', 'colocation-left');
+}
+
+public function cancelColocation(Request $request): RedirectResponse
+{
+    $user = $request->user();
+
+    $colocation = $user->ownedColocations()
+                       ->where('status', 'active')
+                       ->first();
+
+    $colocation->update([
+        'status' => 'cancelled'
+    ]);
+
+    return Redirect::route('profile.edit')->with('status', 'colocation-cancelled');
+}
+
     /**
      * Delete the user's account.
      */
