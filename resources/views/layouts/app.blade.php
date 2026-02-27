@@ -18,6 +18,8 @@
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
 
+            @include('layouts.sidebar')
+
             <!-- Page Heading -->
             @isset($header)
                 <header class="bg-white shadow">
@@ -28,7 +30,7 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            <main class="sm:ml-64 p-4">
                 {{ $slot }}
             </main>
         </div>
