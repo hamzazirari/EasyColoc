@@ -58,4 +58,9 @@ public function colocations()
     return $this->belongsToMany(Colocation::class)
                 ->withPivot('role', 'joined_at', 'left_at');
 }
+
+public function expenses()
+{
+    return $this->hasMany(Expense::class);
+}
 }

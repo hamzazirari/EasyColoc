@@ -24,4 +24,14 @@ class Colocation extends Model
         return $this->belongsToMany(User::class)
                     ->withPivot('role', 'joined_at', 'left_at');
     }
+
+    public function invitations()
+{
+    return $this->hasMany(Invitation::class);
+}
+
+public function expenses()
+{
+    return $this->hasMany(Expense::class);
+}
 }

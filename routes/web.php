@@ -34,9 +34,17 @@ Route::post('/invitation', [InvitationController::class, 'store'])->name('invita
 Route::get('/expenses/create', [ExpenseController::class, 'create'])->name('expenses.create');
 Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.store');
 Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');
+Route::get('/expenses/{expense}/edit', [ExpenseController::class, 'edit'])->name('expenses.edit');
+Route::patch('/expenses/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');
+Route::delete('/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
+
 Route::get('/colocation', [ColocationController::class, 'index'])->name('colocation.index');
 Route::post('/colocation/invite', [InvitationController::class, 'store'])->name('colocation.invite');
 Route::delete('/colocation/{colocation}', [ColocationController::class, 'destroy'])->name('colocations.destroy');
 });
+// Invitation routes
+Route::post('/colocation/invite', [InvitationController::class, 'store'])->name('colocation.invite');
+Route::get('/invitation/accept/{token}', [InvitationController::class, 'accept'])->name('invitation.accept');
+Route::get('/invitation/refuse/{token}', [InvitationController::class, 'refuse'])->name('invitation.refuse');
 
 require __DIR__.'/auth.php';
