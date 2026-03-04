@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ColocationController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\PaymentController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -34,6 +35,9 @@ Route::post('/invitation', [InvitationController::class, 'store'])->name('invita
 Route::get('/expenses/create', [ExpenseController::class, 'create'])->name('expenses.create');
 Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.store');
 Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');
+
+Route::get('/expenses/balances', [ExpenseController::class, 'balances'])->name('expenses.balances');
+
 Route::get('/expenses/{expense}/edit', [ExpenseController::class, 'edit'])->name('expenses.edit');
 Route::patch('/expenses/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');
 Route::delete('/expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
@@ -41,6 +45,8 @@ Route::delete('/expenses/{expense}', [ExpenseController::class, 'destroy'])->nam
 Route::get('/colocation', [ColocationController::class, 'index'])->name('colocation.index');
 Route::post('/colocation/invite', [InvitationController::class, 'store'])->name('colocation.invite');
 Route::delete('/colocation/{colocation}', [ColocationController::class, 'destroy'])->name('colocations.destroy');
+
+Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
 });
 // Invitation routes
 Route::post('/colocation/invite', [InvitationController::class, 'store'])->name('colocation.invite');

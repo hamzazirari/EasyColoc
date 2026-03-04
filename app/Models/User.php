@@ -63,4 +63,9 @@ public function expenses()
 {
     return $this->hasMany(Expense::class);
 }
+
+public function payments()
+{
+    return $this->hasMany(Payment::class, 'payer_user_id');
+}
 }

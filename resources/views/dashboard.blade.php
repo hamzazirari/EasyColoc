@@ -17,7 +17,10 @@
 
                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow">
                     <h5 class="mb-2 text-sm font-bold tracking-tight text-gray-500 uppercase">Réputation</h5>
-                    <p class="text-2xl font-extrabold text-indigo-600">{{ auth()->user()->reputation }} pts</p>
+                    <p class="text-2xl font-extrabold 
+                        {{ auth()->user()->reputation > 0 ? 'text-green-600' : (auth()->user()->reputation < 0 ? 'text-red-600' : 'text-gray-500') }}">
+                        {{ auth()->user()->reputation }} pts
+                    </p>
                 </div>
 
                 <div class="p-6 bg-white border border-gray-200 rounded-lg shadow">

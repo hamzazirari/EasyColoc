@@ -4,15 +4,30 @@
             ColocEasy
         </a>
         <ul class="space-y-2 font-medium">
-            
+
+            {{-- Dashboard --}}
+            <li>
+                <a href="{{ route('dashboard') }}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100">
+                    <span class="ms-3">Tableau de bord</span>
+                </a>
+            </li>
+
             @if(auth()->user()->colocations->isNotEmpty())
+                {{-- Ma Colocation --}}
                 <li>
-                    <a href="{{ route('colocation.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                    <a href="{{ route('colocation.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100">
                         <span class="flex-1 ms-3 whitespace-nowrap">Ma Colocation</span>
                     </a>
                 </li>
-                
+
+                {{-- Dépenses --}}
+                <li>
+                    <a href="{{ route('expenses.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100">
+                        <span class="flex-1 ms-3 whitespace-nowrap">Dépenses</span>
+                    </a>
+                </li>
             @endif
+
             @if(auth()->user()->colocations->isEmpty())
                 <li class="pt-4 mt-4 border-t border-gray-100">
                     <span class="px-3 text-xs font-semibold text-gray-500 uppercase">Configuration</span>
@@ -24,7 +39,6 @@
                 </li>
             @endif
 
-        
         </ul>
     </div>
 </aside>

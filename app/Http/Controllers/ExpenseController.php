@@ -108,8 +108,54 @@ public function update(Request $request, Expense $expense): RedirectResponse
 // Supprimer une depense
 public function destroy(Expense $expense): RedirectResponse
 {
+    $expense->payments()->delete();
+
     $expense->delete();
 
     return redirect()->route('expenses.index')->with('status', 'expense-deleted');
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////
+                   // logic
+
+public function balances(): View
+{
+    $user = auth()->user();
+
+    $colocation = $user->colocations()
+                       ->wherePivot('left_at', null)
+                       ->where('status', 'active')
+                       ->first();
+
+    $members = $colocation->members;
+    $expenses = $colocation->expenses;
+    $totalExpenses = $expenses->sum('amount');
+    $numberOfMembers = $members->count();
+    $individualShare = $numberOfMembers > 0 ? $totalExpenses / $numberOfMembers : 0;
+
+    $balances = [];
+   foreach ($members as $member) {
+
+$paid = $expenses->where('user_id', $member->id)->sum('amount');
+
+$alreadyPaid = $member->payments()
+                      ->whereIn('expense_id', $expenses->pluck('id'))
+                      ->sum('amount');
+
+$paid = $paid + $alreadyPaid;    $balance = $paid - $individualShare;
+    
+    $creditorExpense = $expenses->where('user_id', '!=', $member->id)->first();
+    
+    $balances[] = [
+        'member' => $member,
+        'paid' => $paid,
+        'share' => $individualShare,
+        'balance' => $balance,
+        'expense_id' => $creditorExpense ? $creditorExpense->id : null,
+    ];
+}
+
+    return view('expenses.balances', compact('colocation', 'balances', 'totalExpenses', 'individualShare'));
+}
+
 }

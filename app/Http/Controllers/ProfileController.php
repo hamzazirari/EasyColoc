@@ -56,13 +56,40 @@ public function leaveColocation(Request $request): RedirectResponse
 {
     $user = $request->user();
 
+    $colocation = $user->colocations()
+                       ->wherePivot('left_at', null)
+                       ->where('status', 'active')
+                       ->first();
+
+    if (!$colocation) {
+        return back()->withErrors(['error' => "Vous n'avez pas de colocation active !"]);
+    }
+
+    $expenses = $colocation->expenses;
+    $totalExpenses = $expenses->sum('amount');
+    $numberOfMembers = $colocation->members->count();
+    $individualShare = $numberOfMembers > 0 ? $totalExpenses / $numberOfMembers : 0;
+
+    $paid = $expenses->where('user_id', $user->id)->sum('amount');
+
+    $balance = $paid - $individualShare;
+
+    if ($balance >= 0) {
+        $user->increment('reputation');
+    } else {
+        $user->decrement('reputation');
+    }
+
     $user->colocations()->updateExistingPivot(
-        $user->colocations()->first()->id,
+        $colocation->id,
         ['left_at' => now()]
     );
 
     return Redirect::route('profile.edit')->with('status', 'colocation-left');
 }
+
+
+
 
 public function cancelColocation(Request $request): RedirectResponse
 {
@@ -72,12 +99,35 @@ public function cancelColocation(Request $request): RedirectResponse
                        ->where('status', 'active')
                        ->first();
 
+    if (!$colocation) {
+        return back()->withErrors(['error' => "Vous n'avez pas de colocation active !"]);
+    }
+
+    $expenses = $colocation->expenses;
+    $totalExpenses = $expenses->sum('amount');
+    $numberOfMembers = $colocation->members->count();
+    $individualShare = $numberOfMembers > 0 ? $totalExpenses / $numberOfMembers : 0;
+
+    foreach ($colocation->members as $member) {
+
+        $paid = $expenses->where('user_id', $member->id)->sum('amount');
+
+        $balance = $paid - $individualShare;
+
+        if ($balance < 0) {
+            $member->decrement('reputation');
+        }
+    }
+
     $colocation->update([
         'status' => 'cancelled'
     ]);
 
     return Redirect::route('profile.edit')->with('status', 'colocation-cancelled');
 }
+
+
+
 
     /**
      * Delete the user's account.

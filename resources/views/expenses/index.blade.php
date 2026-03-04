@@ -1,11 +1,16 @@
 <x-app-layout>
     <div class="p-6">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">Dépenses</h1>
-            <a href="{{ route('expenses.create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg">
-                + Ajouter une dépense
-            </a>
-        </div>
+    <h1 class="text-2xl font-bold text-gray-800">Dépenses</h1>
+    <div class="flex space-x-4">
+        <a href="{{ route('expenses.balances') }}" class="bg-green-600 text-white px-4 py-2 rounded-lg">
+            Qui doit à qui ?
+        </a>
+        <a href="{{ route('expenses.create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg">
+            + Ajouter une dépense
+        </a>
+    </div>
+</div>
 
         {{-- Message de succès --}}
         @if(session('status'))
@@ -46,3 +51,21 @@
                                     @csrf @method('DELETE')
                                     <button type="submit" 
                                             class="bg-red-500 text-white px-3 py-1 rounded-lg text-sm"
+                                            onclick="return confirm('Supprimer cette dépense ?')">
+                                        Supprimer
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="px-6 py-10 text-center text-gray-400">
+                                Aucune dépense pour le moment.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</x-app-layout>
